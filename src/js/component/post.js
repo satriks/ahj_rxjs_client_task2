@@ -29,27 +29,23 @@ export default function newPost (post, comments) {
   postImage.src = post.image
 
   const latestComments = document.createElement('span')
-  latestComments.textContent = "Latest comments:"
+  latestComments.textContent = 'Latest comments:'
 
   const postComments = document.createElement('div')
   postComments.classList.add('post__comments')
 
   const loadMore = document.createElement('span')
   loadMore.classList.add('post__comment-more')
-  loadMore.textContent = "Load more"
+  loadMore.textContent = 'Load more'
 
   postInfo.append(postName, postDate)
   postPerson.append(avatar, postInfo)
   postDom.append(postPerson, postImage, latestComments, postComments, loadMore)
 
-  for (let comment of comments) {
+  for (const comment of comments) {
     const commentDom = createComments(comment)
     postComments.appendChild(commentDom)
   }
 
-
   return postDom
-
 }
-
-
