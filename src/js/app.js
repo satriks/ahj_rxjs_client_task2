@@ -3,7 +3,7 @@ import { ajax } from 'rxjs/ajax'
 import { map, catchError } from 'rxjs/operators'
 import { of, mergeMap, switchMap, from } from 'rxjs'
 
-const obs$ = ajax.getJSON('http://localhost:7070/posts/latest')
+const obs$ = ajax.getJSON('https://ahj-rxjs-server-task2.onrender.com/posts/latest')
   .pipe(
     map(data => data.posts),
     catchError(error => {
@@ -12,7 +12,7 @@ const obs$ = ajax.getJSON('http://localhost:7070/posts/latest')
     switchMap(post => {
       return from(post)
         .pipe(
-          map((post) => ajax.getJSON(`http://localhost:7070/posts/${post.id}/comments/latest`)
+          map((post) => ajax.getJSON(`https://ahj-rxjs-server-task2.onrender.com/posts/${post.id}/comments/latest`)
             .pipe(
               map(data => ({ post, comments: data.comments }))
             ))

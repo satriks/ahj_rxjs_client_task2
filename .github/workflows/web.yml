@@ -1,4 +1,4 @@
-name:  ahj rxjs task1
+name:  ahj rxjs task2
 
 on: [push, pull_request]
 
