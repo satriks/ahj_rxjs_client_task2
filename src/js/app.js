@@ -1,21 +1,29 @@
-import newMassage from './component/message'
+import newPost from './component/post'
 import { ajax } from 'rxjs/ajax'
-import { map, catchError } from 'rxjs/operators'
-import { of, interval, mergeMap } from 'rxjs'
+import { map, catchError, tap } from 'rxjs/operators'
+import { of, exhaustMap, mergeMap,switchMap, from } from 'rxjs'
 
-// const obs$ = ajax.getJSON('http://localhost:7070/posts/latest')
-//   .pipe(
-//     mergeMap(() =>
-//       ajax.getJSON(`http://localhost:7070/posts/${id}/comments/latest`)
-//         .pipe(
-//           map(data => data.comments),
-//           catchError(error => {
-//             return of([])
-//           })
-//         )
-//     )
-//   )
+const obs$ = ajax.getJSON('http://localhost:7070/posts/latest')
+  .pipe(
+    map(data => data.posts),
+    catchError(error => {
+      return of([])
+    }),
+    switchMap(post =>{ return from(post)
+      .pipe(
+        map((post) => ajax.getJSON(`http://localhost:7070/posts/${post.id}/comments/latest`)
+          .pipe(
+            map(data => ({post, comments: data.comments})),
+          ))
+       
+    )}),
+    mergeMap((data) => data.pipe(
+      map((data) => { return newPost(data.post, data.comments)} )
+    ))
+    )
+      
 
-// obs$.subscribe(data => {
-//   data.forEach(post => console.log(post))
-// })
+obs$.subscribe(data => {
+  document.querySelector('.posts').append(data)
+
+})
